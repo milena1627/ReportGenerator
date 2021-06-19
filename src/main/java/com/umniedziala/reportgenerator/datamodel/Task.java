@@ -1,4 +1,4 @@
-package datamodel;
+package com.umniedziala.reportgenerator.datamodel;
 
 import java.util.Date;
 

@@ -1,6 +1,5 @@
-package datamodel;
+package com.umniedziala.reportgenerator.datamodel;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class DataStorage {

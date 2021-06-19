@@ -51,8 +51,8 @@ public class ReportGeneratorApp {
       while (!tryAgain.equals("n") && !tryAgain.equals("t")) {
         System.out.println("Wpisano błędną komendę, wpisz jescze raz");
         tryAgain = scanner.next().toLowerCase();
-        if (tryAgain.equals("n")) return null;
       }
+      if (tryAgain.equals("n")) return null;
       choosePath(chooser, scanner);
     }
     return chooser.getSelectedFile().getAbsolutePath();
