@@ -1,33 +1,23 @@
 package com.umniedziala.reportgenerator.datamodel;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
 public class Task {
 	
 	private Date date;
 	private String description;
 	private Double numberOfHours;
 	
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
+	
+	public Task(Date date, String description, Double numberOfHours) {
+		super();
 		this.date = date;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
 		this.description = description;
-	}
-	public Double getNumberOfHours() {
-		return numberOfHours;
-	}
-	public void setNumberOfHours(Double numberOfHours) {
 		this.numberOfHours = numberOfHours;
 	}
-	
-	
-
-	
 }

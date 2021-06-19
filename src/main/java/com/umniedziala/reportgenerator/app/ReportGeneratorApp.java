@@ -1,8 +1,12 @@
 package com.umniedziala.reportgenerator.app;
 
+import com.umniedziala.reportgenerator.report.IReport;
+import com.umniedziala.reportgenerator.report.Report1;
 import lombok.val;
 
 import javax.swing.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -13,6 +17,7 @@ public class ReportGeneratorApp {
   private static final String REPORT_2 = "2 - Raport kosztowności czasowej projektów";
   private static final String REPORT_3 = "3 - Szczegółowy wykaz pracy każdego pracownika";
   private static final String EXIT = "0 - Wyjście";
+  private IReport report;
 
   public static void main(String[] args) {
     val availableOptions = Arrays.asList(REPORT_1, REPORT_2, REPORT_3, EXIT);
@@ -32,13 +37,20 @@ public class ReportGeneratorApp {
   }
 
   private boolean generateRaport1() {
+    report = new Report1();
+    report.generateReport();
+
     return true;
   }
+
   private boolean generateRaport2() {
-    return true;
+
+    return false;
   }
+
   private boolean generateRaport3() {
-    return true;
+
+    return false;
   }
 
   private String choosePath(JFileChooser chooser, Scanner scanner) {
@@ -68,13 +80,13 @@ public class ReportGeneratorApp {
       action = scanner.nextInt();
       switch (action) {
         case 1:
-//          generateRaport1();
+          generateRaport1();
           break;
         case 2:
-//          generateRaport2();
+          generateRaport2();
           break;
         case 3:
-//          generateRaport3();
+          generateRaport3();
           break;
         case 0:
           finishWork = true;
