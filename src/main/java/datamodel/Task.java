@@ -7,6 +7,7 @@ public class Task {
 	private Date date;
 	private String description;
 	private Double numberOfHours;
+	
 	public Date getDate() {
 		return date;
 	}
