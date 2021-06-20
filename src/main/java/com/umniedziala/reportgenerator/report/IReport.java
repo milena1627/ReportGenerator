@@ -1,7 +1,10 @@
 package com.umniedziala.reportgenerator.report;
 
+import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
+import com.umniedziala.reportgenerator.storage.DataStorage;
+
 public interface IReport {
 
-    void generateReport();
+    ReportModel generateReport(DataStorage dataStorage);
 
 }

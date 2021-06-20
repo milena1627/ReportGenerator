@@ -1,6 +1,7 @@
 package com.umniedziala.reportgenerator.report;
 
 import com.umniedziala.reportgenerator.datamodel.Employee;
+import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.datamodel.Task;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,7 +22,7 @@ public class Report1 implements IReport {
 	
 	
 	
-	public void generateReport() {
+	public ReportModel generateReport(DataStorage dataStorage2) {
 		DataStorage dataStorage = DataStorage.getInstance();
 	//	ArrayList<Employee> dataFromFiles = dataStorage.getDataFromFiles();
 
@@ -64,7 +65,7 @@ public class Report1 implements IReport {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		return null;
 	}
 	
 	
