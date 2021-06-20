@@ -3,9 +3,11 @@ package com.umniedziala.reportgenerator.storage;
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Task;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
@@ -21,11 +23,11 @@ public class DataStorage {
     private static DataStorage instance;
 
     private HashSet<Employee> employees;
-    private HashSet<Project> projects;
 
 //	private ArrayList<Employee> employee = new ArrayList<Employee>();
 
     private DataStorage() {
+        employees = new HashSet<>();
     }
 
     public static DataStorage getInstance() {
@@ -53,20 +55,23 @@ public class DataStorage {
 
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
-    public static ArrayList<File> loadFiles(String path) {
+    public static void loadFiles(String path) {
 
         File rootFolder = new File(path);
         File[] listOfFiles = rootFolder.listFiles();
-        ArrayList<File> files = new ArrayList<>();
+        if (listOfFiles == null) {
+            return;
+        }
         for (File file : listOfFiles) {
             if (file.isDirectory()) {
                 loadFiles(file.toString());
             } else {
-                files.add(file);
+                System.out.println("Starting processing file: " + file.getName());
                 val workbook = loadWorkbook(file);
                 val employeeName = FilenameUtils.removeExtension(file.getName()).split("_");
-//                val employee = Employee.builder().surname(employeeName[0]).name(employeeName[1]);
-                for (int i=0; i<workbook.getNumberOfSheets(); i++) {
+                val employee = new Employee(employeeName[1], employeeName[0]);
+                val projects = new HashSet<Project>();
+                for (int i = 0; i< Objects.requireNonNull(workbook).getNumberOfSheets(); i++) {
                     val sheet = workbook.getSheetAt(i);
                     val project = new Project();
                     HashSet<Task> taskSet = new HashSet<>();
@@ -74,16 +79,20 @@ public class DataStorage {
                     project.setListOfTasks(taskSet);
                     for (int j=2; j<sheet.getLastRowNum(); j++) {
                         val row = sheet.getRow(j);
+                        val firstCell = row.getCell(0);
+                        if (!firstCell.getCellType().equals(CellType.NUMERIC) || firstCell.getNumericCellValue() == 0.0) {
+                            continue;
+                        }
                         val taskDate = DateUtil.getJavaDate(row.getCell(0).getNumericCellValue());
                         val taskName = row.getCell(1).getStringCellValue();
                         val duration = row.getCell(2).getNumericCellValue();
                         taskSet.add(new Task(taskDate, taskName, duration));
                     }
+                    projects.add(project);
                 }
-                System.out.println(file.getName());
+                employee.setListOfProjects(projects);
             }
         }
-        return files;
     }
 
     public static Workbook loadWorkbook(File file) {
