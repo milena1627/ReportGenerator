@@ -1,25 +1,14 @@
 package com.umniedziala.reportgenerator.datamodel;
 
-import java.util.HashSet;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.HashSet;
+@Getter
+@Setter
 public class Project {
 	
 	private String name;
 	private HashSet<Task> listOfTasks;
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public HashSet<Task> getListOfTasks() {
-		return listOfTasks;
-	}
-	public void setListOfTasks(HashSet<Task> listOfTasks) {
-		this.listOfTasks = listOfTasks;
-	}
-	
-	
 
 }
