@@ -2,6 +2,7 @@ package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.report.IReport;
 import com.umniedziala.reportgenerator.report.Report1;
+import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.val;
 
 import javax.swing.*;
