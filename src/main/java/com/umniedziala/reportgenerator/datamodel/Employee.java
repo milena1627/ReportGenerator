@@ -10,18 +10,15 @@ import java.util.HashSet;
 public class Employee {
 	
 	private String name;
-	private String surname;
-	private HashSet<Task> listOfTasks;
+	private HashSet<Project> listOfProjects;
 
-	public Employee(String name, String surname) {
-		super();
+	public Employee(String name) {
 		this.name = name;
-		this.surname = surname;
-		this.listOfTasks = new HashSet<>();
+		this.listOfProjects = new HashSet<>();
 	}
 	
-	public void add(Task task) {
-		listOfTasks.add(task);
+	public void add(Project project) {
+		listOfProjects.add(project);
 	}
 
 	public double sumOfHours() {
