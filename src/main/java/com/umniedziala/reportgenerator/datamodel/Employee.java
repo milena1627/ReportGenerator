@@ -24,4 +24,10 @@ public class Employee {
 		listOfTasks.add(task);
 	}
 
+	public double sumOfHours() {
+		return listOfProjects.stream()
+				.map(Project::getSumOfHours)
+				.mapToDouble(Double::doubleValue).sum();
+	}
+
 }
