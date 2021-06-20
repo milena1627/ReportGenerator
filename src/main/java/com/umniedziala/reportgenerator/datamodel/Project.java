@@ -11,4 +11,8 @@ public class Project {
 	private String name;
 	private HashSet<Task> listOfTasks;
 
+	public void add(Task task) {
+		listOfTasks.add(task);
+	}
+
 }

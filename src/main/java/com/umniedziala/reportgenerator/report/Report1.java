@@ -23,7 +23,7 @@ public class Report1 implements IReport {
 	
 	public void generateReport() {
 		DataStorage dataStorage = DataStorage.getInstance();
-		ArrayList<Employee> dataFromFiles = dataStorage.getDataFromFiles();
+	//	ArrayList<Employee> dataFromFiles = dataStorage.getDataFromFiles();
 
 		File file = new File("./src/main/resources/report1.xlsx");
 		try {
@@ -39,19 +39,19 @@ public class Report1 implements IReport {
 			Sheet sheet = workbook.createSheet("arkusz1");
 
 			// uzupelnienie arkusza danymi
-			for (int i = 0; i < dataFromFiles.size(); i++) {
-				Row row = sheet.createRow(i); // pusty wiersz (o numerze 'i')
-				int column = 0; // zaczynamy od lewej strony
-				Cell cell = row.createCell(column++); // pierwsza komorka
-				cell.setCellValue(dataFromFiles.get(i).getName());
-				cell = row.createCell(column++); // druga komorka (w prawo)
-				cell.setCellValue(dataFromFiles.get(i).getSurname());
-				HashSet<Task> listOfTasks = dataFromFiles.get(i).getListOfTasks();
-				for(Task t : listOfTasks) {
-					cell = row.createCell(column++); // kolejne komorki w prawo
-					cell.setCellValue(t.getNumberOfHours());
-				}
-			}
+//			for (int i = 0; i < dataFromFiles.size(); i++) {
+//				Row row = sheet.createRow(i); // pusty wiersz (o numerze 'i')
+//				int column = 0; // zaczynamy od lewej strony
+//				Cell cell = row.createCell(column++); // pierwsza komorka
+//				cell.setCellValue(dataFromFiles.get(i).getName());
+//				cell = row.createCell(column++); // druga komorka (w prawo)
+//				cell.setCellValue(dataFromFiles.get(i).getSurname());
+//				HashSet<Task> listOfTasks = dataFromFiles.get(i).getListOfProjects();
+//				for(Task t : listOfTasks) {
+//					cell = row.createCell(column++); // kolejne komorki w prawo
+//					cell.setCellValue(t.getNumberOfHours());
+//				}
+//			}
 
 
 			FileOutputStream outputStream = new FileOutputStream(file);

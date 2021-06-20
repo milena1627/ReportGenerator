@@ -35,37 +35,36 @@ public class DataStorage {
         return instance;
     }
 
-    public ArrayList<Employee> getDataFromFiles() {
-
-        Employee employee1 = new Employee("Maria", "Kwiatek");
-        Employee employee2 = new Employee("Mariusz", "Kwiatkowski");
-
-        Task task = new Task((new Date()), "Nowy Task", 9.5);
-        employee1.add(task);
-        employee2.add(task);
-
-        ArrayList<Employee> employees = new ArrayList<Employee>();
-        employees.add(employee1);
-        employees.add(employee2);
-
-        return employees;
-    }
+//    public ArrayList<Employee> getDataFromFiles() {
+//
+//        Employee employee1 = new Employee("Maria", "Kwiatek");
+//        Employee employee2 = new Employee("Mariusz", "Kwiatkowski");
+//
+//        Task task = new Task((new Date()), "Nowy Task", 9.5);
+//        employee1.add(task);
+//        employee2.add(task);
+//
+//        ArrayList<Employee> employees = new ArrayList<Employee>();
+//        employees.add(employee1);
+//        employees.add(employee2);
+//
+//        return employees;
+//    }
 
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
     public static ArrayList<File> loadFiles(String path) {
-        File yearFolder = new File(path);
-        File[] listOfMonthFolders = yearFolder.listFiles();
-        ArrayList<File> files = new ArrayList<>();
 
-        for (File file : listOfMonthFolders) {
-            File[] listOfXmlFilesInMonthFolder = file.listFiles();
-            for (File XmlFile : listOfXmlFilesInMonthFolder) {
-                files.add(XmlFile);
+        File rootFolder = new File(path);
+        File[] listOfFiles = rootFolder.listFiles();
+        ArrayList<File> files = new ArrayList<>();
+        for (File file : listOfFiles) {
+            if (file.isDirectory()) {
+                loadFiles(file.toString());
+            } else {
+                files.add(file);
+                System.out.println(file.getName());
             }
-        }
-        for (File file : files) {
-            System.out.println(file.getName());
         }
         return files;
     }
