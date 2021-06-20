@@ -68,19 +68,21 @@ public class DataStorage {
             } else {
                 System.out.println("Starting processing file: " + file.getName());
                 val workbook = loadWorkbook(file);
-                val employeeName = FilenameUtils.removeExtension(file.getName()).split("_");
-
-
-                val employee = new Employee(employeeName[1], employeeName[0]);
-
+                val employeeName = FilenameUtils.removeExtension(file.getName()).replace("_", " ");
+                val employee = employees.stream()
+                    .filter(emp -> emp.getName().equals(employeeName))
+                    .findFirst()
+                    .orElse(new Employee(employeeName));
                 val projects = new HashSet<Project>();
                 for (int i = 0; i< Objects.requireNonNull(workbook).getNumberOfSheets(); i++) {
                     val sheet = workbook.getSheetAt(i);
-                    val project = new Project();
-                    HashSet<Task> taskSet = new HashSet<>();
-                    project.setName(workbook.getSheetName(i));
-                    project.setListOfTasks(taskSet);
-                    for (int j=2; j<sheet.getLastRowNum(); j++) {
+                    val projectName = workbook.getSheetName(i);
+                    val project = employee.getListOfProjects().stream()
+                        .filter(prj -> prj.getName().equals(projectName))
+                        .findFirst()
+                        .orElse(new Project(projectName, new ArrayList<>()));
+                    val taskSet = project.getListOfTasks();
+                    for (int j=1; j<=sheet.getLastRowNum(); j++) {
                         val row = sheet.getRow(j);
                         val firstCell = row.getCell(0);
                         if (!firstCell.getCellType().equals(CellType.NUMERIC) || firstCell.getNumericCellValue() == 0.0) {
@@ -101,17 +103,17 @@ public class DataStorage {
     }
     public void printAll(){
         for (Employee employee : employees) {
-            System.out.println(employee.getName() + employee.getSurname());
+            System.out.println(employee.getName());
             for (Project project : employee.getListOfProjects()){
                 System.out.println(project.getName());
                 for (Task task : project.getListOfTasks()){
-                    System.out.println(task.getDate().toString() + task.getNumberOfHours());
+                    System.out.println(task.getDescription() + " " + task.getDate().toString() + " " + task.getNumberOfHours());
                 }
             }
         }
     }
 
-    public static Workbook loadWorkbook(File file) {
+    private static Workbook loadWorkbook(File file) {
             try {
                 return WorkbookFactory.create(file);
             } catch (EncryptedDocumentException | IOException e) {

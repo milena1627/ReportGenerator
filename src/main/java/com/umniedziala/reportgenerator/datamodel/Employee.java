@@ -10,13 +10,10 @@ import java.util.HashSet;
 public class Employee {
 	
 	private String name;
-	private String surname;
 	private HashSet<Project> listOfProjects;
 
-	public Employee(String name, String surname) {
-		super();
+	public Employee(String name) {
 		this.name = name;
-		this.surname = surname;
 		this.listOfProjects = new HashSet<>();
 	}
 	
