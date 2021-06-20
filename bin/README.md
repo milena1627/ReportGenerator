@@ -1,2 +1,2 @@
 # ReportGenerator
-Report Generator creates reports of performances for employees
+Report Generator creates employees performance high quality reporting for a client.

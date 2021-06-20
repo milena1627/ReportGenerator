@@ -21,7 +21,7 @@ public class ReportGeneratorApp {
   private IReport report;
 
   public static void main(String[] args) {
-    DataStorage.loadFiles("C:\\Users\\marfr\\Desktop\\pracownia_projektowa\\przykładowe dane\\reporter-dane");
+
     val availableOptions = Arrays.asList(REPORT_1, REPORT_2, REPORT_3, EXIT);
     Scanner scanner = new Scanner(System.in);
     ReportGeneratorApp reportGeneratorApp = new ReportGeneratorApp();
@@ -30,10 +30,11 @@ public class ReportGeneratorApp {
     val absolutePath = reportGeneratorApp.choosePath(new JFileChooser(), scanner);
     if (absolutePath == null) return;
     System.out.println("Wybrano ścieżkę: " + absolutePath);
-
+    DataStorage storage = new DataStorage();
+    storage.loadFiles(absolutePath);
     // TODO: pass folder name to DataLoader
     // IF loaded
-
+    storage.printAll();
     reportGeneratorApp.showMenu(availableOptions, scanner);
     scanner.close();
   }
