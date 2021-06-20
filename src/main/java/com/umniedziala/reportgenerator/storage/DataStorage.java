@@ -54,23 +54,27 @@ public class DataStorage {
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
     public static ArrayList<File> loadFiles(String path) {
-        File yearFolder = new File(path);
-        File[] listOfMonthFolders = yearFolder.listFiles();
+        File rootFolder = new File(path);
+        File[] listOfYearsFolders = rootFolder.listFiles();
         ArrayList<File> files = new ArrayList<>();
 
-        for (File file : listOfMonthFolders) {
-            File[] listOfXmlFilesInMonthFolder = file.listFiles();
-            for (File XmlFile : listOfXmlFilesInMonthFolder) {
-                files.add(XmlFile);
+        for (File file : listOfYearsFolders) {
+            File[] listOfMonthsFolders = file.listFiles();
+            for (File yearFolder : listOfMonthsFolders) {
+                File[] listOfXmlFilesInMonthFolder = yearFolder.listFiles();
+                for (File XlsFile : listOfXmlFilesInMonthFolder) {
+                    files.add(XlsFile);
+                }
             }
         }
-        for (File file : files) {
-            System.out.println(file.getName());
+        for (File xlsfile : files) {
+            System.out.println(xlsfile.getName());
         }
         return files;
     }
 
     public static ArrayList<Workbook> loadWorkbooks(ArrayList<File> files) {
+
         ArrayList<Workbook> workbooks = new ArrayList<>();
         for (File file : files) {
             try {
