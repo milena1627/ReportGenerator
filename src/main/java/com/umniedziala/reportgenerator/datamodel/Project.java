@@ -17,4 +17,10 @@ public class Project {
 		listOfTasks.add(task);
 	}
 
+	public double getSumOfHours() {
+		return listOfTasks.stream()
+				.map(Task::getNumberOfHours)
+				.mapToDouble(Double::doubleValue).sum();
+	}
+
 }
