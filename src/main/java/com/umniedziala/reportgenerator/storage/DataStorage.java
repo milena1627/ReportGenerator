@@ -26,7 +26,7 @@ public class DataStorage {
 
 //	private ArrayList<Employee> employee = new ArrayList<Employee>();
 
-    private DataStorage() {
+    public DataStorage() {
         employees = new HashSet<>();
     }
 
@@ -55,7 +55,7 @@ public class DataStorage {
 
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
-    public static void loadFiles(String path) {
+    public void loadFiles(String path) {
 
         File rootFolder = new File(path);
         File[] listOfFiles = rootFolder.listFiles();
@@ -69,7 +69,10 @@ public class DataStorage {
                 System.out.println("Starting processing file: " + file.getName());
                 val workbook = loadWorkbook(file);
                 val employeeName = FilenameUtils.removeExtension(file.getName()).split("_");
+
+
                 val employee = new Employee(employeeName[1], employeeName[0]);
+
                 val projects = new HashSet<Project>();
                 for (int i = 0; i< Objects.requireNonNull(workbook).getNumberOfSheets(); i++) {
                     val sheet = workbook.getSheetAt(i);
@@ -90,7 +93,20 @@ public class DataStorage {
                     }
                     projects.add(project);
                 }
+
                 employee.setListOfProjects(projects);
+                employees.add(employee);
+            }
+        }
+    }
+    public void printAll(){
+        for (Employee employee : employees) {
+            System.out.println(employee.getName() + employee.getSurname());
+            for (Project project : employee.getListOfProjects()){
+                System.out.println(project.getName());
+                for (Task task : project.getListOfTasks()){
+                    System.out.println(task.getDate().toString() + task.getNumberOfHours());
+                }
             }
         }
     }

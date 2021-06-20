@@ -30,10 +30,11 @@ public class ReportGeneratorApp {
     val absolutePath = reportGeneratorApp.choosePath(new JFileChooser(), scanner);
     if (absolutePath == null) return;
     System.out.println("Wybrano ścieżkę: " + absolutePath);
-    DataStorage.loadFiles(absolutePath);
+    DataStorage storage = new DataStorage();
+    storage.loadFiles(absolutePath);
     // TODO: pass folder name to DataLoader
     // IF loaded
-
+    storage.printAll();
     reportGeneratorApp.showMenu(availableOptions, scanner);
     scanner.close();
   }
