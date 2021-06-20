@@ -7,7 +7,6 @@ import lombok.val;
 
 import javax.swing.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +25,8 @@ public class ReportGeneratorApp {
     ReportGeneratorApp reportGeneratorApp = new ReportGeneratorApp();
     System.out.println("RAPORT GENERATOR \n");
     System.out.println("Podaj ścieżkę do folderu zawierającego roczne zestawienia pracowników");
-    val absolutePath = reportGeneratorApp.choosePath(new JFileChooser(), scanner);
+    val chooser = new JFileChooser();
+    val absolutePath = reportGeneratorApp.choosePath(chooser, scanner);
     if (absolutePath == null) return;
     System.out.println("Wybrano ścieżkę: " + absolutePath);
 
@@ -65,8 +65,10 @@ public class ReportGeneratorApp {
         System.out.println("Wpisano błędną komendę, wpisz jescze raz");
         tryAgain = scanner.next().toLowerCase();
       }
-      if (tryAgain.equals("n")) return null;
-      choosePath(chooser, scanner);
+      if (tryAgain.equals("t")) {
+        choosePath(chooser, scanner);
+      }
+      return null;
     }
     return chooser.getSelectedFile().getAbsolutePath();
   }
