@@ -1,8 +1,11 @@
 package com.umniedziala.reportgenerator.app;
 
+import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.report.IReport;
 import com.umniedziala.reportgenerator.report.Report1;
+import com.umniedziala.reportgenerator.report.Report2;
 import com.umniedziala.reportgenerator.storage.DataStorage;
+import lombok.Data;
 import lombok.val;
 
 import javax.swing.*;
@@ -10,6 +13,7 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ReportGeneratorApp {
 
@@ -30,24 +34,23 @@ public class ReportGeneratorApp {
     val absolutePath = reportGeneratorApp.choosePath(chooser, scanner);
     if (absolutePath == null) return;
     System.out.println("Wybrano ścieżkę: " + absolutePath);
-    DataStorage storage = new DataStorage();
+    DataStorage storage = DataStorage.getInstance();
     storage.loadFiles(absolutePath);
-    // TODO: pass folder name to DataLoader
-    // IF loaded
     storage.printAll();
-    reportGeneratorApp.showMenu(availableOptions, scanner);
+    reportGeneratorApp.showMenu(availableOptions, scanner, storage);
     scanner.close();
   }
 
-  private boolean generateRaport1() {
+  private boolean generateRaport1(DataStorage storage) {
     report = new Report1();
-    report.generateReport();
-
+    report.generateReport(storage);
     return true;
   }
 
-  private boolean generateRaport2() {
-
+  private boolean generateRaport2(DataStorage storage) {
+    report = new Report2();
+    val report2 = report.generateReport(storage);
+    printReport(report2);
     return false;
   }
 
@@ -75,7 +78,7 @@ public class ReportGeneratorApp {
     return chooser.getSelectedFile().getAbsolutePath();
   }
 
-  private void showMenu(List<String> availableOptions, Scanner scanner) {
+  private void showMenu(List<String> availableOptions, Scanner scanner, DataStorage storage) {
     boolean finishWork = false;
     int action;
     while (!finishWork) {
@@ -84,21 +87,24 @@ public class ReportGeneratorApp {
       System.out.print("Wybierz akcje: ");
       action = scanner.nextInt();
       switch (action) {
-        case 1:
-          generateRaport1();
-          break;
-        case 2:
-          generateRaport2();
-          break;
-        case 3:
-          generateRaport3();
-          break;
-        case 0:
-          finishWork = true;
-          break;
-        default:
-          System.out.println("Wybrana akcja nie inieje");
+        case 1 -> generateRaport1(storage);
+        case 2 -> generateRaport2(storage);
+        case 3 -> generateRaport3();
+        case 0 -> finishWork = true;
+        default -> System.out.println("Wybrana akcja nie inieje");
       }
+    }
+  }
+
+  private void printReport(ReportModel reportModel) {
+    for (val row: reportModel.getRows()) {
+      val values = row.getCellsInRow().stream()
+          .map(ReportModel.Cell::getValue)
+          .collect(Collectors.toList());
+      for (int i=0; i<values.size(); i++) {
+        System.out.printf("%s ", values.get(i));
+      }
+      System.out.printf("\n");
     }
   }
 }
