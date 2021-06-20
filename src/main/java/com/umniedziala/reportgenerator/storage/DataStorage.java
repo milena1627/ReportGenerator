@@ -5,15 +5,15 @@ import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Task;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Getter
 @Setter
@@ -63,23 +63,36 @@ public class DataStorage {
                 loadFiles(file.toString());
             } else {
                 files.add(file);
+                val workbook = loadWorkbook(file);
+                val employeeName = FilenameUtils.removeExtension(file.getName()).split("_");
+//                val employee = Employee.builder().surname(employeeName[0]).name(employeeName[1]);
+                for (int i=0; i<workbook.getNumberOfSheets(); i++) {
+                    val sheet = workbook.getSheetAt(i);
+                    val project = new Project();
+                    HashSet<Task> taskSet = new HashSet<>();
+                    project.setName(workbook.getSheetName(i));
+                    project.setListOfTasks(taskSet);
+                    for (int j=2; j<sheet.getLastRowNum(); j++) {
+                        val row = sheet.getRow(j);
+                        val taskDate = DateUtil.getJavaDate(row.getCell(0).getNumericCellValue());
+                        val taskName = row.getCell(1).getStringCellValue();
+                        val duration = row.getCell(2).getNumericCellValue();
+                        taskSet.add(new Task(taskDate, taskName, duration));
+                    }
+                }
                 System.out.println(file.getName());
             }
         }
         return files;
     }
 
-    public static ArrayList<Workbook> loadWorkbooks(ArrayList<File> files) {
-        ArrayList<Workbook> workbooks = new ArrayList<>();
-        for (File file : files) {
+    public static Workbook loadWorkbook(File file) {
             try {
-                workbooks.add(WorkbookFactory.create(file));
+                return WorkbookFactory.create(file);
             } catch (EncryptedDocumentException | IOException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return workbooks;
     }
 }
 
