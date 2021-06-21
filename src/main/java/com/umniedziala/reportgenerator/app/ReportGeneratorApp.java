@@ -1,9 +1,10 @@
 package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.report.IReport;
-import com.umniedziala.reportgenerator.report.Report1;
-import com.umniedziala.reportgenerator.report.Report2;
+import com.umniedziala.reportgenerator.services.report.IReport;
+import com.umniedziala.reportgenerator.services.report.Report1;
+import com.umniedziala.reportgenerator.services.report.Report2;
+import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.Data;
 import lombok.val;
@@ -17,6 +18,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReportGeneratorApp {
