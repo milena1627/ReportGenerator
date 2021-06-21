@@ -3,6 +3,8 @@ package com.umniedziala.reportgenerator.datamodel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
@@ -19,5 +21,11 @@ public class Task {
 		this.date = date;
 		this.description = description;
 		this.numberOfHours = numberOfHours;
+	}
+
+	public int getMonth(){
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int month = localDate.getMonthValue();
+		return month;
 	}
 }

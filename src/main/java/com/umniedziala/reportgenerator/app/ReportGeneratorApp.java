@@ -4,6 +4,7 @@ import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.report.IReport;
 import com.umniedziala.reportgenerator.report.Report1;
 import com.umniedziala.reportgenerator.report.Report2;
+import com.umniedziala.reportgenerator.report.Report3;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.Data;
 import lombok.val;
@@ -59,8 +60,13 @@ public class ReportGeneratorApp {
         return false;
     }
 
-    private boolean generateRaport3() {
-
+    private boolean generateRaport3(DataStorage storage) {
+        report = new Report3();
+        ((Report3) report).selectEmployee(storage);
+        val report3 = report.generateReport(storage);
+        if(report3.getRows().size()>1){
+            printReport(report3);
+        }
         return false;
     }
 
@@ -94,7 +100,7 @@ public class ReportGeneratorApp {
             switch (action) {
                 case 1 -> generateRaport1(storage);
                 case 2 -> generateRaport2(storage);
-                case 3 -> generateRaport3();
+                case 3 -> generateRaport3(storage);
                 case 0 -> finishWork = true;
                 default -> System.out.println("Wybrana akcja nie inieje");
             }
