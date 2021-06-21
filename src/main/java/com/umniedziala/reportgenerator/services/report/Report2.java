@@ -18,7 +18,7 @@ public class Report2 implements IReport {
 
   private static final ReportModel.Cell COLUMN_1_NAME= new ReportModel.Cell("L.p.", CellType.STRING);
   private static final ReportModel.Cell COLUMN_2_NAME= new ReportModel.Cell("Projekt", CellType.STRING);
-  private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("h", CellType.STRING);
+  private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
   @Override
   public ReportModel generateReport(DataStorage dataStorage, String year) {
