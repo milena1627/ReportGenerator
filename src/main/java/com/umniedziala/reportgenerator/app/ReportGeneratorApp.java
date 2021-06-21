@@ -1,9 +1,10 @@
 package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.report.IReport;
-import com.umniedziala.reportgenerator.report.Report1;
-import com.umniedziala.reportgenerator.report.Report2;
+import com.umniedziala.reportgenerator.services.report.IReport;
+import com.umniedziala.reportgenerator.services.report.Report1;
+import com.umniedziala.reportgenerator.services.report.Report2;
+import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.Data;
 import lombok.val;
@@ -17,6 +18,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReportGeneratorApp {
@@ -45,17 +47,18 @@ public class ReportGeneratorApp {
         scanner.close();
     }
 
-    private boolean generateRaport1(DataStorage storage) {
+    private boolean generateRaport1(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report1();
-        val report1 = report.generateReport(storage);
+        val report1 = report.generateReport(storage, year);
         printReport(report1);
-        exportReport(report1);
         return true;
     }
 
-    private boolean generateRaport2(DataStorage storage) {
+    private boolean generateRaport2(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report2();
-        val report2 = report.generateReport(storage);
+        val report2 = report.generateReport(storage, year);
         printReport(report2);
         exportReport(report2);
         return false;
@@ -94,8 +97,8 @@ public class ReportGeneratorApp {
             System.out.print("Wybierz akcje: ");
             action = scanner.nextInt();
             switch (action) {
-                case 1 -> generateRaport1(storage);
-                case 2 -> generateRaport2(storage);
+                case 1 -> generateRaport1(storage, scanner);
+                case 2 -> generateRaport2(storage, scanner);
                 case 3 -> generateRaport3();
                 case 0 -> finishWork = true;
                 default -> System.out.println("Wybrana akcja nie inieje");
@@ -123,8 +126,8 @@ public class ReportGeneratorApp {
         for (int i = 0; i < reportModel.getRows().size(); i++) {
             sheet.createRow(i);
             val values = reportModel.getRows().get(i).getCellsInRow().stream()
-                    .map(ReportModel.Cell::getValue)
-                    .collect(Collectors.toList());
+                .map(ReportModel.Cell::getValue)
+                .collect(Collectors.toList());
             for (int j = 0; j < values.size(); j++) {
                 sheet.getRow(i).createCell(j).setCellValue(values.get(j));
             }
@@ -137,4 +140,19 @@ public class ReportGeneratorApp {
             e.printStackTrace();
         }
     }
+
+    private String pickAvailableYears(Set<String> years, Scanner scanner) {
+        System.out.println("Wybierz rok dla którego chcesz pobrać raport, aby wyjść wpisz 0");
+        years.forEach(System.out::println);
+        var year = scanner.next();
+        while (!years.contains(year) && !year.equals("0")) {
+            System.out.println("Dane dla wybranego roku nie istnieją wybierz inną datę lub wpisz 0 aby wyjść");
+            year = scanner.next();
+        }
+        if (year.equals("0")) {
+            return null;
+        }
+        return year;
+    }
+
 }
