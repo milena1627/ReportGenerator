@@ -45,15 +45,18 @@ public class ReportGeneratorApp {
         scanner.close();
     }
 
-    private boolean generateRaport1(DataStorage storage) {
+    private boolean generateRaport1(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report1();
-        report.generateReport(storage);
+        val report1 = report.generateReport(storage, year);
+        printReport(report1);
         return true;
     }
 
-    private boolean generateRaport2(DataStorage storage) {
+    private boolean generateRaport2(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report2();
-        val report2 = report.generateReport(storage);
+        val report2 = report.generateReport(storage, year);
         printReport(report2);
         exportRaport(report2);
         return false;
@@ -92,8 +95,8 @@ public class ReportGeneratorApp {
             System.out.print("Wybierz akcje: ");
             action = scanner.nextInt();
             switch (action) {
-                case 1 -> generateRaport1(storage);
-                case 2 -> generateRaport2(storage);
+                case 1 -> generateRaport1(storage, scanner);
+                case 2 -> generateRaport2(storage, scanner);
                 case 3 -> generateRaport3();
                 case 0 -> finishWork = true;
                 default -> System.out.println("Wybrana akcja nie inieje");
@@ -113,26 +116,18 @@ public class ReportGeneratorApp {
         }
     }
 
-    private void exportRaport(ReportModel reportModel) {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
-        String fileName = reportModel.getReportName() + ".xlsx";
-
-        for (int i = 0; i < reportModel.getRows().size(); i++) {
-            sheet.createRow(i);
-            val values = reportModel.getRows().get(i).getCellsInRow().stream()
-                    .map(ReportModel.Cell::getValue)
-                    .collect(Collectors.toList());
-            for (int j = 0; j < values.size(); j++) {
-                sheet.getRow(i).createCell(j).setCellValue(values.get(j));
-            }
+    private String pickAvailableYears(Set<String> years, Scanner scanner) {
+        System.out.println("Wybierz rok dla którego chcesz pobrać raport, aby wyjść wpisz 0");
+        years.forEach(System.out::println);
+        var year = scanner.next();
+        while (!years.contains(year) && !year.equals("0")) {
+            System.out.println("Dane dla wybranego roku nie istnieją wybierz inną datę lub wpisz 0 aby wyjść");
+            year = scanner.next();
         }
-
-        try {
-            OutputStream fileOut = new FileOutputStream(fileName);
-            workbook.write(fileOut);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (year.equals("0")) {
+            return null;
         }
+        return year;
     }
+
 }

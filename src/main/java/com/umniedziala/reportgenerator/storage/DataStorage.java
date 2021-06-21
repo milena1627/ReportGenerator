@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 
@@ -21,13 +21,15 @@ import java.util.*;
 @Setter
 public class DataStorage {
     private static DataStorage instance;
-
+    private Set<String> availableYears;
     private HashSet<Employee> employees;
+    private Map<String, HashSet<Employee>> employeesXD;
 
 //	private ArrayList<Employee> employee = new ArrayList<Employee>();
 
     public DataStorage() {
         employees = new HashSet<>();
+        availableYears = new TreeSet<>();
     }
 
     public static DataStorage getInstance() {
@@ -64,6 +66,9 @@ public class DataStorage {
         }
         for (File file : listOfFiles) {
             if (file.isDirectory()) {
+                if (file.getName().length() == 4 && StringUtils.isNumeric(file.getName())) {
+                    availableYears.add(file.getName());
+                }
                 loadFiles(file.toString());
             } else {
                 System.out.println("Starting processing file: " + file.getName());
