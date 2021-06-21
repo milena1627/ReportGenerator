@@ -3,7 +3,9 @@ package com.umniedziala.reportgenerator.datamodel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.text.ParseException;
 import java.util.HashSet;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -21,9 +23,17 @@ public class Employee {
 		listOfProjects.add(project);
 	}
 
-	public double sumOfHours() {
+	public double sumOfHours(String year) {
 		return listOfProjects.stream()
-				.map(Project::getSumOfHours)
+				.map(project -> {
+					try {
+						return project.getSumOfHours(year);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					return null;
+				})
+				.filter(Objects::nonNull)
 				.mapToDouble(Double::doubleValue).sum();
 	}
 
