@@ -50,7 +50,7 @@ public class DataStorage {
                     availableYears.add(file.getName());
                 }
                 loadFiles(file.toString());
-            } else {
+            } else if (file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx") ) {
                 System.out.println("Starting processing file: " + file.getName());
                 val workbook = loadWorkbook(file);
                 val employeeName = FilenameUtils.removeExtension(file.getName()).replace("_", " ");
