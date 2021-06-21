@@ -42,7 +42,7 @@ public class ReportGeneratorApp {
         System.out.println("Wybrano ścieżkę: " + absolutePath);
         DataStorage storage = DataStorage.getInstance();
         storage.loadFiles(absolutePath);
-        storage.printAll();
+//        storage.printAll();
         reportGeneratorApp.showMenu(availableOptions, scanner, storage);
         scanner.close();
     }
@@ -52,6 +52,7 @@ public class ReportGeneratorApp {
         report = new Report1();
         val report1 = report.generateReport(storage, year);
         printReport(report1);
+        exportReport(report1, scanner);
         return true;
     }
 
@@ -60,7 +61,7 @@ public class ReportGeneratorApp {
         report = new Report2();
         val report2 = report.generateReport(storage, year);
         printReport(report2);
-        exportReport(report2);
+        exportReport(report2, scanner);
         return false;
     }
 
@@ -118,26 +119,34 @@ public class ReportGeneratorApp {
         }
     }
 
-    private void exportReport(ReportModel reportModel) {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
-        String fileName = reportModel.getReportName() + ".xlsx";
+    private void exportReport(ReportModel reportModel, Scanner scanner) {
 
-        for (int i = 0; i < reportModel.getRows().size(); i++) {
-            sheet.createRow(i);
-            val values = reportModel.getRows().get(i).getCellsInRow().stream()
-                .map(ReportModel.Cell::getValue)
-                .collect(Collectors.toList());
-            for (int j = 0; j < values.size(); j++) {
-                sheet.getRow(i).createCell(j).setCellValue(values.get(j));
+        System.out.println("Czy chcesz wyeksportować tabelę do pliku xlsx? t/n");
+        var answer = scanner.next();
+        if (answer.equals("t")) {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
+            String fileName = reportModel.getReportName() + ".xlsx";
+
+            for (int i = 0; i < reportModel.getRows().size(); i++) {
+                sheet.createRow(i);
+                val values = reportModel.getRows().get(i).getCellsInRow().stream()
+                        .map(ReportModel.Cell::getValue)
+                        .collect(Collectors.toList());
+                for (int j = 0; j < values.size(); j++) {
+                    sheet.getRow(i).createCell(j).setCellValue(values.get(j));
+                }
             }
-        }
 
-        try {
-            OutputStream fileOut = new FileOutputStream(fileName);
-            workbook.write(fileOut);
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                OutputStream fileOut = new FileOutputStream(fileName);
+                workbook.write(fileOut);
+                System.out.println("Zapisano plik " + fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Nie zapisano pliku");
         }
     }
 
