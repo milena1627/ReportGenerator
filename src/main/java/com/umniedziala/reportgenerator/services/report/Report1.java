@@ -18,7 +18,7 @@ public class Report1 implements IReport {
 
 	private static final ReportModel.Cell COLUMN_1_NAME= new ReportModel.Cell("L.p.", CellType.STRING);
 	private static final ReportModel.Cell COLUMN_2_NAME= new ReportModel.Cell("Nazwisko i Imię", CellType.STRING);
-	private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("h", CellType.STRING);
+	private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
 	public ReportModel generateReport(DataStorage dataStorage, String year) {
 		val reportModel = new ReportModel();
