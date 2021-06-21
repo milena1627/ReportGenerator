@@ -60,7 +60,7 @@ public class ReportGeneratorApp {
         report = new Report2();
         val report2 = report.generateReport(storage, year);
         printReport(report2);
-        exportRaport(report2);
+        exportReport(report2);
         return false;
     }
 
@@ -115,6 +115,29 @@ public class ReportGeneratorApp {
                 System.out.printf("%s ", values.get(i));
             }
             System.out.printf("\n");
+        }
+    }
+
+    private void exportReport(ReportModel reportModel) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
+        String fileName = reportModel.getReportName() + ".xlsx";
+
+        for (int i = 0; i < reportModel.getRows().size(); i++) {
+            sheet.createRow(i);
+            val values = reportModel.getRows().get(i).getCellsInRow().stream()
+                .map(ReportModel.Cell::getValue)
+                .collect(Collectors.toList());
+            for (int j = 0; j < values.size(); j++) {
+                sheet.getRow(i).createCell(j).setCellValue(values.get(j));
+            }
+        }
+
+        try {
+            OutputStream fileOut = new FileOutputStream(fileName);
+            workbook.write(fileOut);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
