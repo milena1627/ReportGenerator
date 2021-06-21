@@ -78,7 +78,7 @@ public class ReportGeneratorApp {
                     "Chcesz wybrać jeszcze raz? [t-tak, n-nie]");
             var tryAgain = scanner.next().toLowerCase();
             while (!tryAgain.equals("n") && !tryAgain.equals("t")) {
-                System.out.println("Wpisano błędną komendę, wpisz jescze raz");
+                System.out.println("Wpisano błędną komendę, wpisz jeszcze raz");
                 tryAgain = scanner.next().toLowerCase();
             }
             if (tryAgain.equals("t")) {
@@ -121,8 +121,12 @@ public class ReportGeneratorApp {
 
     private void exportReport(ReportModel reportModel, Scanner scanner) {
 
-        System.out.println("Czy chcesz wyeksportować tabelę do pliku xlsx? t/n");
-        var answer = scanner.next();
+        System.out.println("Czy chcesz wyeksportować tabelę do pliku xlsx? [t-tak, n-nie]");
+        var answer = scanner.next().toLowerCase();
+        while (!answer.equals("n") && !answer.equals("t")) {
+            System.out.println("Wpisano błędną komendę, wpisz jeszcze raz");
+            answer = scanner.next().toLowerCase();
+        }
         if (answer.equals("t")) {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
