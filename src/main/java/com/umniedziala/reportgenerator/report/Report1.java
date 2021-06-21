@@ -2,74 +2,50 @@ package com.umniedziala.reportgenerator.report;
 
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.datamodel.Task;
 import com.umniedziala.reportgenerator.storage.DataStorage;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import lombok.val;
+import org.apache.poi.ss.usermodel.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
+import static java.util.stream.Collectors.groupingBy;
 
 public class Report1 implements IReport {
-	
-	String reportName;
-	
-	
-	
-	
-	public ReportModel generateReport(DataStorage dataStorage2) {
-		DataStorage dataStorage = DataStorage.getInstance();
-	//	ArrayList<Employee> dataFromFiles = dataStorage.getDataFromFiles();
 
-		File file = new File("./src/main/resources/report1.xlsx");
-		try {
-			// aby zapisac do istniejacego pliku!!
-			/*if(!file.exists()) {
-				file.createNewFile();
-			}
-			FileInputStream inputStream = new FileInputStream(file);*/
-			//Workbook workbook = new HSSFWorkbook(inputStream);
-			// aby zapisac do nowego pliku, czystego
-			Workbook workbook = new XSSFWorkbook();
-
-			Sheet sheet = workbook.createSheet("arkusz1");
-
-			// uzupelnienie arkusza danymi
-//			for (int i = 0; i < dataFromFiles.size(); i++) {
-//				Row row = sheet.createRow(i); // pusty wiersz (o numerze 'i')
-//				int column = 0; // zaczynamy od lewej strony
-//				Cell cell = row.createCell(column++); // pierwsza komorka
-//				cell.setCellValue(dataFromFiles.get(i).getName());
-//				cell = row.createCell(column++); // druga komorka (w prawo)
-//				cell.setCellValue(dataFromFiles.get(i).getSurname());
-//				HashSet<Task> listOfTasks = dataFromFiles.get(i).getListOfProjects();
-//				for(Task t : listOfTasks) {
-//					cell = row.createCell(column++); // kolejne komorki w prawo
-//					cell.setCellValue(t.getNumberOfHours());
-//				}
-//			}
+	private static final ReportModel.Cell COLUMN_1_NAME= new ReportModel.Cell("L.p.", CellType.STRING);
+	private static final ReportModel.Cell COLUMN_2_NAME= new ReportModel.Cell("Nazwisko i imię", CellType.STRING);
+	private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
 
-			FileOutputStream outputStream = new FileOutputStream(file);
-			workbook.write(outputStream);
-			outputStream.close();
+	@Override
+	public ReportModel generateReport(DataStorage dataStorage) {
+		val reportModel = new ReportModel();
+		reportModel.setReportName("Report 1");
 
-			workbook.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		val data = dataStorage.getEmployees();
+		val employees= data.stream()
+				.collect(groupingBy(Employee::getName, TreeMap::new,
+						Collectors.mapping(Employee::sumOfHours,Collectors.summingDouble(Double::doubleValue))));
+
+		LinkedList<ReportModel.Row> rows = new LinkedList<>();
+
+		LinkedList<ReportModel.Cell> columnNames = new LinkedList<>();
+		columnNames.add(COLUMN_1_NAME);
+		columnNames.add(COLUMN_2_NAME);
+		columnNames.add(COLUMN_3_NAME);
+		rows.add(new ReportModel.Row(columnNames));
+
+		var i=1;
+		for (val employee: employees.entrySet()) {
+			LinkedList<ReportModel.Cell> cells = new LinkedList<>();
+			cells.add(new ReportModel.Cell(String.valueOf(i), CellType.NUMERIC));
+			cells.add(new ReportModel.Cell(employee.getKey(), CellType.STRING));
+			cells.add(new ReportModel.Cell(String.valueOf(employee.getValue()), CellType.NUMERIC));
+			rows.add(new ReportModel.Row(cells));
+			i++;
 		}
-		return null;
+		reportModel.setRows(rows);
+		return reportModel;
 	}
-	
-	
-	
-	
 
 }

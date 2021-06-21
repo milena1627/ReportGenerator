@@ -47,7 +47,9 @@ public class ReportGeneratorApp {
 
     private boolean generateRaport1(DataStorage storage) {
         report = new Report1();
-        report.generateReport(storage);
+        val report1 = report.generateReport(storage);
+        printReport(report1);
+        exportReport(report1);
         return true;
     }
 
@@ -55,7 +57,7 @@ public class ReportGeneratorApp {
         report = new Report2();
         val report2 = report.generateReport(storage);
         printReport(report2);
-        exportRaport(report2);
+        exportReport(report2);
         return false;
     }
 
@@ -113,7 +115,7 @@ public class ReportGeneratorApp {
         }
     }
 
-    private void exportRaport(ReportModel reportModel) {
+    private void exportReport(ReportModel reportModel) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
         String fileName = reportModel.getReportName() + ".xlsx";

@@ -3,18 +3,15 @@ package com.umniedziala.reportgenerator.storage;
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Task;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Getter
@@ -23,8 +20,6 @@ public class DataStorage {
     private static DataStorage instance;
 
     private HashSet<Employee> employees;
-
-//	private ArrayList<Employee> employee = new ArrayList<Employee>();
 
     public DataStorage() {
         employees = new HashSet<>();
@@ -36,22 +31,6 @@ public class DataStorage {
         }
         return instance;
     }
-
-//    public ArrayList<Employee> getDataFromFiles() {
-//
-//        Employee employee1 = new Employee("Maria", "Kwiatek");
-//        Employee employee2 = new Employee("Mariusz", "Kwiatkowski");
-//
-//        Task task = new Task((new Date()), "Nowy Task", 9.5);
-//        employee1.add(task);
-//        employee2.add(task);
-//
-//        ArrayList<Employee> employees = new ArrayList<Employee>();
-//        employees.add(employee1);
-//        employees.add(employee2);
-//
-//        return employees;
-//    }
 
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
