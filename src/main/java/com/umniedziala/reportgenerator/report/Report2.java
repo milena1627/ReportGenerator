@@ -21,6 +21,7 @@ public class Report2 implements IReport {
   @Override
   public ReportModel generateReport(DataStorage dataStorage) {
     val reportModel = new ReportModel();
+    reportModel.setReportName("Report 2");
 
     val data = dataStorage.getEmployees();
     val projects= data.stream()
