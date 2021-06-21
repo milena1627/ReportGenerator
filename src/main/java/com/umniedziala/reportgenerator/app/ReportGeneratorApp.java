@@ -66,6 +66,7 @@ public class ReportGeneratorApp {
         val report3 = report.generateReport(storage);
         if(report3.getRows().size()>1){
             printReport(report3);
+            exportRaport(report3);
         }
         return false;
     }
