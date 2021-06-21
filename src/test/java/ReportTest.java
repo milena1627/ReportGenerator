@@ -2,7 +2,7 @@ import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.datamodel.Task;
-import com.umniedziala.reportgenerator.report.Report1;
+import com.umniedziala.reportgenerator.services.report.Report1;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,8 @@ public class ReportTest {
         employee = first.get();
 
         assertEquals(employee.getName(), "test employee");
-        assertEquals(employee.sumOfHours(), 20);
-        assertEquals(employee.getListOfProjects().size(), 2);
+        assertEquals(employee.sumOfHours("2012"), 5);
+        assertEquals(employee.getListOfProjects().size(), 1);
 
         Optional<Project> firstProject = employee.getListOfProjects().stream().findFirst();
         project = firstProject.get();
@@ -53,7 +53,7 @@ public class ReportTest {
     public void shouldGenerateReport1() {
         dataStorage.loadFiles("./src/test/resources/loadFilesTest");
         Report1 report1 = new Report1();
-        ReportModel reportModel = report1.generateReport(dataStorage);
+        ReportModel reportModel = report1.generateReport(dataStorage, "2012");
 
         assertEquals(reportModel.getReportName(), "Report 1");
         LinkedList<ReportModel.Row> rows = reportModel.getRows();
