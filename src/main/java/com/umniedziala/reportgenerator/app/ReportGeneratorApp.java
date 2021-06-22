@@ -134,11 +134,10 @@ public class ReportGeneratorApp {
 
             for (int i = 0; i < reportModel.getRows().size(); i++) {
                 sheet.createRow(i);
-                val values = reportModel.getRows().get(i).getCellsInRow().stream()
-                        .map(ReportModel.Cell::getValue)
-                        .collect(Collectors.toList());
+                val values = reportModel.getRows().get(i).getCellsInRow();
                 for (int j = 0; j < values.size(); j++) {
-                    sheet.getRow(i).createCell(j).setCellValue(values.get(j));
+                    sheet.getRow(i).createCell(j).setCellValue(values.get(j).getValue());
+                    sheet.getRow(i).createCell(j).setCellType(values.get(j).getType());
                 }
             }
 
