@@ -136,8 +136,8 @@ public class ReportGeneratorApp {
                 sheet.createRow(i);
                 val values = reportModel.getRows().get(i).getCellsInRow();
                 for (int j = 0; j < values.size(); j++) {
-                    sheet.getRow(i).createCell(j).setCellValue(values.get(j).getValue());
                     sheet.getRow(i).createCell(j).setCellType(values.get(j).getType());
+                    sheet.getRow(i).createCell(j).setCellValue(values.get(j).getValue());
                 }
             }
 
