@@ -3,6 +3,7 @@ package com.umniedziala.reportgenerator.report;
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
+import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.val;
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,7 +20,7 @@ public class Report3 implements IReport {
   private static String employeeName;
 
   @Override
-  public ReportModel generateReport(DataStorage dataStorage) {
+  public ReportModel generateReport(DataStorage dataStorage, String filter) {
     val reportModel = new ReportModel();
     reportModel.setReportName("Report 3");
 
