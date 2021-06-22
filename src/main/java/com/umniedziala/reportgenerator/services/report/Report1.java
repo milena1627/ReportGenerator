@@ -22,7 +22,7 @@ public class Report1 implements IReport {
 
 	public ReportModel generateReport(DataStorage dataStorage, String year) {
 		val reportModel = new ReportModel();
-		reportModel.setReportName("Report 2");
+		reportModel.setReportName("Report 1");
 
 		val data = dataStorage.getEmployees();
 		val employees= data.stream()
