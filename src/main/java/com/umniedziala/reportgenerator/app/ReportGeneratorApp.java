@@ -1,6 +1,7 @@
 package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
+import com.umniedziala.reportgenerator.report.Report3;
 import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.services.report.Report1;
 import com.umniedziala.reportgenerator.services.report.Report2;
@@ -65,8 +66,14 @@ public class ReportGeneratorApp {
         return false;
     }
 
-    private boolean generateRaport3() {
-
+    private boolean generateRaport3(DataStorage storage, Scanner scanner) {
+        report = new Report3();
+        ((Report3) report).selectEmployee(storage);
+        val report3 = report.generateReport(storage, null);
+        if(report3.getRows().size()>1){
+            printReport(report3);
+            exportReport(report3, scanner);
+        }
         return false;
     }
 
@@ -100,7 +107,7 @@ public class ReportGeneratorApp {
             switch (action) {
                 case 1 -> generateRaport1(storage, scanner);
                 case 2 -> generateRaport2(storage, scanner);
-                case 3 -> generateRaport3();
+                case 3 -> generateRaport3(storage, scanner);
                 case 0 -> finishWork = true;
                 default -> System.out.println("Wybrana akcja nie inieje");
             }

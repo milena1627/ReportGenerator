@@ -32,4 +32,10 @@ public class Project {
 				.mapToDouble(Double::doubleValue).sum();
 	}
 
+	public double getSumOfProjectHoursMonthly(int month){
+		return listOfTasks.stream()
+				.filter(task -> task.getMonth()==(month))
+				.map(Task::getNumberOfHours)
+				.mapToDouble(Double::doubleValue).sum();
+	}
 }
