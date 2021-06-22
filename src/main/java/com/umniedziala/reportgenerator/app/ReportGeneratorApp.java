@@ -1,10 +1,11 @@
 package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.report.IReport;
-import com.umniedziala.reportgenerator.report.Report1;
-import com.umniedziala.reportgenerator.report.Report2;
 import com.umniedziala.reportgenerator.report.Report3;
+import com.umniedziala.reportgenerator.services.report.IReport;
+import com.umniedziala.reportgenerator.services.report.Report1;
+import com.umniedziala.reportgenerator.services.report.Report2;
+import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.Data;
 import lombok.val;
@@ -18,6 +19,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReportGeneratorApp {
@@ -41,32 +43,36 @@ public class ReportGeneratorApp {
         System.out.println("Wybrano ścieżkę: " + absolutePath);
         DataStorage storage = DataStorage.getInstance();
         storage.loadFiles(absolutePath);
-        storage.printAll();
+//        storage.printAll();
         reportGeneratorApp.showMenu(availableOptions, scanner, storage);
         scanner.close();
     }
 
-    private boolean generateRaport1(DataStorage storage) {
+    private boolean generateRaport1(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report1();
-        report.generateReport(storage);
+        val report1 = report.generateReport(storage, year);
+        printReport(report1);
+        exportReport(report1, scanner);
         return true;
     }
 
-    private boolean generateRaport2(DataStorage storage) {
+    private boolean generateRaport2(DataStorage storage, Scanner scanner) {
+        val year = pickAvailableYears(storage.getAvailableYears(), scanner);
         report = new Report2();
-        val report2 = report.generateReport(storage);
+        val report2 = report.generateReport(storage, year);
         printReport(report2);
-        exportRaport(report2);
+        exportReport(report2, scanner);
         return false;
     }
 
-    private boolean generateRaport3(DataStorage storage) {
+    private boolean generateRaport3(DataStorage storage, Scanner scanner) {
         report = new Report3();
         ((Report3) report).selectEmployee(storage);
-        val report3 = report.generateReport(storage);
+        val report3 = report.generateReport(storage, null);
         if(report3.getRows().size()>1){
             printReport(report3);
-            exportRaport(report3);
+            exportReport(report3, scanner);
         }
         return false;
     }
@@ -79,7 +85,7 @@ public class ReportGeneratorApp {
                     "Chcesz wybrać jeszcze raz? [t-tak, n-nie]");
             var tryAgain = scanner.next().toLowerCase();
             while (!tryAgain.equals("n") && !tryAgain.equals("t")) {
-                System.out.println("Wpisano błędną komendę, wpisz jescze raz");
+                System.out.println("Wpisano błędną komendę, wpisz jeszcze raz");
                 tryAgain = scanner.next().toLowerCase();
             }
             if (tryAgain.equals("t")) {
@@ -99,9 +105,9 @@ public class ReportGeneratorApp {
             System.out.print("Wybierz akcje: ");
             action = scanner.nextInt();
             switch (action) {
-                case 1 -> generateRaport1(storage);
-                case 2 -> generateRaport2(storage);
-                case 3 -> generateRaport3(storage);
+                case 1 -> generateRaport1(storage, scanner);
+                case 2 -> generateRaport2(storage, scanner);
+                case 3 -> generateRaport3(storage, scanner);
                 case 0 -> finishWork = true;
                 default -> System.out.println("Wybrana akcja nie inieje");
             }
@@ -120,26 +126,52 @@ public class ReportGeneratorApp {
         }
     }
 
-    private void exportRaport(ReportModel reportModel) {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
-        String fileName = reportModel.getReportName() + ".xlsx";
+    private void exportReport(ReportModel reportModel, Scanner scanner) {
 
-        for (int i = 0; i < reportModel.getRows().size(); i++) {
-            sheet.createRow(i);
-            val values = reportModel.getRows().get(i).getCellsInRow().stream()
-                    .map(ReportModel.Cell::getValue)
-                    .collect(Collectors.toList());
-            for (int j = 0; j < values.size(); j++) {
-                sheet.getRow(i).createCell(j).setCellValue(values.get(j));
-            }
+        System.out.println("Czy chcesz wyeksportować tabelę do pliku xlsx? [t-tak, n-nie]");
+        var answer = scanner.next().toLowerCase();
+        while (!answer.equals("n") && !answer.equals("t")) {
+            System.out.println("Wpisano błędną komendę, wpisz jeszcze raz");
+            answer = scanner.next().toLowerCase();
         }
+        if (answer.equals("t")) {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet(reportModel.getReportName());
+            String fileName = reportModel.getReportName() + ".xlsx";
 
-        try {
-            OutputStream fileOut = new FileOutputStream(fileName);
-            workbook.write(fileOut);
-        } catch (Exception e) {
-            e.printStackTrace();
+            for (int i = 0; i < reportModel.getRows().size(); i++) {
+                sheet.createRow(i);
+                val values = reportModel.getRows().get(i).getCellsInRow();
+                for (int j = 0; j < values.size(); j++) {
+                    sheet.getRow(i).createCell(j).setCellType(values.get(j).getType());
+                    sheet.getRow(i).createCell(j).setCellValue(values.get(j).getValue());
+                }
+            }
+
+            try {
+                OutputStream fileOut = new FileOutputStream(fileName);
+                workbook.write(fileOut);
+                System.out.println("Zapisano plik " + fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Nie zapisano pliku");
         }
     }
+
+    private String pickAvailableYears(Set<String> years, Scanner scanner) {
+        System.out.println("Wybierz rok dla którego chcesz pobrać raport, aby wyjść wpisz 0");
+        years.forEach(System.out::println);
+        var year = scanner.next();
+        while (!years.contains(year) && !year.equals("0")) {
+            System.out.println("Dane dla wybranego roku nie istnieją wybierz inną datę lub wpisz 0 aby wyjść");
+            year = scanner.next();
+        }
+        if (year.equals("0")) {
+            return null;
+        }
+        return year;
+    }
+
 }

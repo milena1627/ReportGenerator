@@ -11,7 +11,6 @@ import java.util.LinkedList;
 public class ReportModel {
   String reportName;
   LinkedList<Row> rows;
-  int sum;
 
   @Data
   @AllArgsConstructor

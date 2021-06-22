@@ -3,31 +3,29 @@ package com.umniedziala.reportgenerator.storage;
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Task;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Getter
 @Setter
 public class DataStorage {
     private static DataStorage instance;
-
+    private Set<String> availableYears;
     private HashSet<Employee> employees;
-
-//	private ArrayList<Employee> employee = new ArrayList<Employee>();
+    private Map<String, HashSet<Employee>> employeesXD;
 
     public DataStorage() {
         employees = new HashSet<>();
+        availableYears = new TreeSet<>();
     }
 
     public static DataStorage getInstance() {
@@ -36,22 +34,6 @@ public class DataStorage {
         }
         return instance;
     }
-
-//    public ArrayList<Employee> getDataFromFiles() {
-//
-//        Employee employee1 = new Employee("Maria", "Kwiatek");
-//        Employee employee2 = new Employee("Mariusz", "Kwiatkowski");
-//
-//        Task task = new Task((new Date()), "Nowy Task", 9.5);
-//        employee1.add(task);
-//        employee2.add(task);
-//
-//        ArrayList<Employee> employees = new ArrayList<Employee>();
-//        employees.add(employee1);
-//        employees.add(employee2);
-//
-//        return employees;
-//    }
 
     // wczytywanie plików xls z podanej ściezki (także z podfolderów)
 
@@ -64,8 +46,11 @@ public class DataStorage {
         }
         for (File file : listOfFiles) {
             if (file.isDirectory()) {
+                if (file.getName().length() == 4 && StringUtils.isNumeric(file.getName())) {
+                    availableYears.add(file.getName());
+                }
                 loadFiles(file.toString());
-            } else {
+            } else if (file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx") ) {
                 System.out.println("Starting processing file: " + file.getName());
                 val workbook = loadWorkbook(file);
                 val employeeName = FilenameUtils.removeExtension(file.getName()).replace("_", " ");
