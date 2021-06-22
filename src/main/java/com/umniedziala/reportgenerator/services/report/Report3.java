@@ -1,4 +1,4 @@
-package com.umniedziala.reportgenerator.report;
+package com.umniedziala.reportgenerator.services.report;
 
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;

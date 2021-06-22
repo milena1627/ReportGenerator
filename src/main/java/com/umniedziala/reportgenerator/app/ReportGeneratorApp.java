@@ -1,13 +1,11 @@
 package com.umniedziala.reportgenerator.app;
 
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.report.Report3;
+import com.umniedziala.reportgenerator.services.report.Report3;
 import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.services.report.Report1;
 import com.umniedziala.reportgenerator.services.report.Report2;
-import com.umniedziala.reportgenerator.services.report.IReport;
 import com.umniedziala.reportgenerator.storage.DataStorage;
-import lombok.Data;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
