@@ -58,16 +58,11 @@ public class Report3 implements IReport {
   }
 
   public void selectEmployee (DataStorage storage){
-    employeeName = ""; // cleaning employee name to prevent from executing unwanted Report creation
+//    employeeName = ""; // cleaning employee name to prevent from executing unwanted Report creation
     String selectedEmployee="";
     val data = storage.getEmployees();
-    List<String> employees = data.stream()
-            .map(Employee::getName)
-            .sorted()
-            .collect(Collectors.toList());
 
-    System.out.println("\nPRACOWNICY:");
-    employees.forEach(System.out::println);
+    listEmployees(data);
 
       while (!selectedEmployee.equals("0")) {
         selectedEmployee = getUserInput("\nWpisz Imię i Nazwisko (0 - Wyjście):");
@@ -78,6 +73,17 @@ public class Report3 implements IReport {
           System.out.println("Nieprawidłowa nazwa pracownika. Spróbuj ponownie.");
         }
       }
+
+  }
+
+  private void listEmployees(HashSet<Employee> data) {
+    List<String> employees = data.stream()
+            .map(Employee::getName)
+            .sorted()
+            .collect(Collectors.toList());
+
+    System.out.println("\nPRACOWNICY:");
+    employees.forEach(System.out::println);
   }
 
   private boolean validateUserInput(String selectedEmployee, HashSet<Employee> data) {
