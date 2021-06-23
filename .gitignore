@@ -35,3 +35,6 @@ target/
 .settings/
 .classpath
 .project
+
+# generated reports in root directory
+/*.xlsx
