@@ -25,9 +25,9 @@ public class Task {
 		this.numberOfHours = numberOfHours;
 	}
 
-	public int getMonth(){
+	public String getMonth(){
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		int month = localDate.getMonthValue();
+		String month = String.valueOf(localDate.getMonthValue());
 		return month;
 	}
 }

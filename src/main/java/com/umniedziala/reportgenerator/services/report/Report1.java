@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -20,10 +21,11 @@ public class Report1 implements IReport {
 	private static final ReportModel.Cell COLUMN_2_NAME= new ReportModel.Cell("Nazwisko i Imię", CellType.STRING);
 	private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
-	public ReportModel generateReport(DataStorage dataStorage, String year) {
+	public ReportModel generateReport(DataStorage dataStorage, Map<String, String> filters) {
 		val reportModel = new ReportModel();
 		reportModel.setReportName("Report 1");
 
+		val year = filters.get("year");
 		val data = dataStorage.getEmployees();
 		val employees= data.stream()
 				.collect(Collectors.toMap(Employee::getName,employee -> employee.sumOfHours(year),(v1, v2)->v1, TreeMap::new));

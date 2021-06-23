@@ -1,5 +1,6 @@
 package com.umniedziala.reportgenerator.app;
 
+import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.services.report.Report3;
 import com.umniedziala.reportgenerator.services.report.IReport;
@@ -14,10 +15,7 @@ import javax.swing.*;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReportGeneratorApp {
@@ -47,18 +45,22 @@ public class ReportGeneratorApp {
     }
 
     private boolean generateRaport1(DataStorage storage, Scanner scanner) {
+        Map<String, String> filters = new HashMap<>();
         val year = pickAvailableYears(storage.getAvailableYears(), scanner);
+        filters.put("year", year);
         report = new Report1();
-        val report1 = report.generateReport(storage, year);
+        val report1 = report.generateReport(storage, filters);
         printReport(report1);
         exportReport(report1, scanner);
         return true;
     }
 
     private boolean generateRaport2(DataStorage storage, Scanner scanner) {
+        Map<String, String> filters = new HashMap<>();
         val year = pickAvailableYears(storage.getAvailableYears(), scanner);
+        filters.put("year", year);
         report = new Report2();
-        val report2 = report.generateReport(storage, year);
+        val report2 = report.generateReport(storage, filters);
         printReport(report2);
         exportReport(report2, scanner);
         return false;
@@ -66,8 +68,15 @@ public class ReportGeneratorApp {
 
     private boolean generateRaport3(DataStorage storage, Scanner scanner) {
         report = new Report3();
-        ((Report3) report).selectEmployee(storage);
-        val report3 = report.generateReport(storage, null);
+        Map<String, String> filters = new HashMap<>();
+        String employee = selectEmployee(storage);
+        if (employee == null || employee.equals("0")){
+            return false;
+        }
+        String year = pickAvailableYears(storage.getAvailableYears(), scanner);
+        filters.put("employee", employee);
+        filters.put("year", year);
+        val report3 = report.generateReport(storage, filters);
         if(report3.getRows().size()>1){
             printReport(report3);
             exportReport(report3, scanner);
@@ -170,6 +179,56 @@ public class ReportGeneratorApp {
             return null;
         }
         return year;
+    }
+
+    private String selectEmployee (DataStorage storage){
+        String userSelection="";
+        val data = storage.getEmployees();
+
+        listEmployees(data);
+
+        while (!userSelection.equals("0")) {
+            userSelection = getUserInput("\nWpisz Imię i Nazwisko (0 - Wyjście):");
+            if(userSelection.equals("0")){
+                break;
+            }
+            String validationResult = validateUserInput(userSelection, data);
+            if(validateUserInput(userSelection, data).equals("OK")){
+                return userSelection;
+            } else {
+                System.out.println(validationResult);
+            }
+        }
+        return null;
+    }
+
+    private void listEmployees(HashSet<Employee> data) {
+        List<String> employees = data.stream()
+                .map(Employee::getName)
+                .sorted()
+                .collect(Collectors.toList());
+
+        System.out.println("\n********************+" +
+                "\nPRACOWNICY:");
+        employees.forEach(System.out::println);
+    }
+
+    private String validateUserInput(String selectedEmployee, HashSet<Employee> data) {
+        for (Employee emp : data){
+            if(emp.getName().equals(selectedEmployee)){
+                return "OK";
+            }
+        }
+        return " > Nieprawidłowa nazwa pracownika. Spróbuj ponownie.";
+    }
+
+    public static String getUserInput(String title){
+        Scanner sc = new Scanner(System.in);
+        System.out.println(title);
+        String input;
+        input = sc.nextLine();
+
+        return input;
     }
 
 }

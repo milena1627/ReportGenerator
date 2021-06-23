@@ -21,10 +21,11 @@ public class Report2 implements IReport {
   private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
   @Override
-  public ReportModel generateReport(DataStorage dataStorage, String year) {
+  public ReportModel generateReport(DataStorage dataStorage, Map<String, String> filters) {
     val reportModel = new ReportModel();
     reportModel.setReportName("Report 2");
 
+    val year = filters.get("year");
     val data = dataStorage.getEmployees();
     val projects= data.stream()
         .map(Employee::getListOfProjects)
