@@ -35,14 +35,14 @@ public class ReportTest {
         dataStorage.loadFiles("./src/test/resources");
         HashSet<Employee> employees = dataStorage.getEmployees();
 
-        assertEquals(employees.size(), 1);
+        assertEquals(employees.size(), 2);
 
         Optional<Employee> first = employees.stream().findFirst();
         employee = first.get();
 
-        assertEquals(employee.getName(), "test employee");
-        assertEquals(employee.sumOfHours("2012"), 5);
-        assertEquals(employee.getListOfProjects().size(), 1);
+        assertEquals("test employee", employee.getName());
+        assertEquals(5.0, employee.sumOfHours("2012"));
+        assertEquals(1, employee.getListOfProjects().size());
 
         Optional<Project> firstProject = employee.getListOfProjects().stream().findFirst();
         project = firstProject.get();
