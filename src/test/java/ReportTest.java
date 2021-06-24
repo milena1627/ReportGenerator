@@ -35,7 +35,7 @@ public class ReportTest {
         dataStorage.loadFiles("./src/test/resources");
         HashSet<Employee> employees = dataStorage.getEmployees();
 
-        assertEquals(employees.size(), 2);
+        assertEquals(1, employees.size());
 
         Optional<Employee> first = employees.stream().findFirst();
         employee = first.get();
@@ -47,9 +47,9 @@ public class ReportTest {
         Optional<Project> firstProject = employee.getListOfProjects().stream().findFirst();
         project = firstProject.get();
 
-        assertEquals(project.getListOfTasks().size(), 2);
+        assertEquals(2, project.getListOfTasks().size());
         Task task = project.getListOfTasks().get(0);
-        assertEquals(task.getNumberOfHours(), 3);
+        assertEquals(3, task.getNumberOfHours());
     }
 
     @Test
@@ -270,12 +270,6 @@ public class ReportTest {
         Map<String, String> filters = new HashMap<>();
         filters.put("employee", "Szymon Batko");
         filters.put("year", "2021");
-//
-//        Report3 report3 = new Report3();
-//
-//        Map<String, String> filters = new HashMap<>();
-//        filters.put("employee", "test employee");
-//        filters.put("year", "2012");
 
 
         ReportModel reportModel = report3.generateReport(dataStorage, filters);
@@ -285,12 +279,6 @@ public class ReportTest {
         assertEquals("Projekt", reportModel.getRows().get(0).getCellsInRow().get(1).getValue());
         assertEquals("Godziny", reportModel.getRows().get(0).getCellsInRow().get(2).getValue());
 
-//        ReportModel.Cell cell = reportModel.getRows().get(1).getCellsInRow().get(0);
-//        assertEquals("1", cell.getValue());
-//        cell = reportModel.getRows().get(1).getCellsInRow().get(1);
-//        assertEquals("Projekt1", cell.getValue());
-//        cell =reportModel.getRows().get(1).getCellsInRow().get(2);
-//        assertEquals("5.0", cell.getValue());
 
         ReportModel.Cell cell = reportModel.getRows().get(1).getCellsInRow().get(0);
         assertEquals("1", cell.getValue());
@@ -307,6 +295,4 @@ public class ReportTest {
         assertEquals("5.0", cell.getValue());
 
     }
-
-
 }
