@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface IReport {
 
-    ReportModel generateReport(DataStorage dataStoragem, Map<String, String> filters);
+    ReportModel generateReport(DataStorage dataStorage, Map<String, String> filters);
 
 }

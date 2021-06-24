@@ -21,7 +21,6 @@ public class DataStorage {
     private static DataStorage instance;
     private Set<String> availableYears;
     private HashSet<Employee> employees;
-    private Map<String, HashSet<Employee>> employeesXD;
 
     public DataStorage() {
         employees = new HashSet<>();

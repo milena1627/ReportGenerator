@@ -3,7 +3,6 @@ package com.umniedziala.reportgenerator.services.report;
 import com.umniedziala.reportgenerator.datamodel.Employee;
 import com.umniedziala.reportgenerator.datamodel.Project;
 import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
-import com.umniedziala.reportgenerator.datamodel.Task;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.val;
 import org.apache.poi.ss.usermodel.CellType;

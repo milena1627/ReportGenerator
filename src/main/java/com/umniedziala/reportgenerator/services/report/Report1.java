@@ -5,11 +5,7 @@ import com.umniedziala.reportgenerator.datamodel.Reports.ReportModel;
 import com.umniedziala.reportgenerator.storage.DataStorage;
 import lombok.val;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.*;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,6 +17,7 @@ public class Report1 implements IReport {
 	private static final ReportModel.Cell COLUMN_2_NAME= new ReportModel.Cell("Nazwisko i Imię", CellType.STRING);
 	private static final ReportModel.Cell COLUMN_3_NAME= new ReportModel.Cell("Godziny", CellType.STRING);
 
+	@Override
 	public ReportModel generateReport(DataStorage dataStorage, Map<String, String> filters) {
 		val reportModel = new ReportModel();
 		reportModel.setReportName("Report 1");
