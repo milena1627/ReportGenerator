@@ -1,2 +1,3 @@
 # ReportGenerator
-Report Generator creates employees performance high quality reporting for a client.
+Easy soft for managing programming team performance. 
+This program creates high quality employee's performance reporting for a client.
